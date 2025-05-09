@@ -7,9 +7,10 @@ st.set_page_config(page_title="Heart Failure Predictor", layout="centered")
 
 st.title("💓 Heart Failure Prediction App")
 st.write("This app uses patient medical data to predict the risk of heart failure.")
+import joblib
 
 @st.cache_resource
-import joblib
+
 def load_model():
     scaler = joblib.load("scaler.pkl")
     model = joblib.load("model.pkl")
