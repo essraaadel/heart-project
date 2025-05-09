@@ -5,3 +5,5 @@ scikit-learn
 matplotlib
 xgboost
 tensorflow
+joblib
+pickle
