@@ -15,7 +15,7 @@ st.write("This app uses patient medical data to predict the risk of heart failur
 # Load dataset
 @st.cache_data
 def load_data():
-    return pd.read_csv("heart.csv")
+    return pd.read_csv("heart_failure_clinical_records_dataset.csv")
 
 df = load_data()
 
