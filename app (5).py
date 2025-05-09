@@ -1,42 +1,21 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
-
-
-
-
+import joblib
 
 st.set_page_config(page_title="Heart Failure Predictor", layout="centered")
 
 st.title("💓 Heart Failure Prediction App")
 st.write("This app uses patient medical data to predict the risk of heart failure.")
 
-# Load dataset
-@st.cache_data
-def load_data():
-    return pd.read_csv("heart_failure_clinical_records_dataset.csv")
+@st.cache_resource
+def load_model():
+    scaler = joblib.load("scaler.pkl")
+    model = joblib.load("model.pkl")
+    return scaler, model
 
-df = load_data()
+scaler, model = load_model()
 
-# Prepare features and target
-X = df.drop("DEATH_EVENT", axis=1)
-y = df["DEATH_EVENT"]
-
-# Train model
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
-
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
-acc = accuracy_score(y_test, model.predict(X_test))
-
-# Sidebar input form
 st.sidebar.header("Enter Patient Data")
 
 def user_input_features():
@@ -77,9 +56,6 @@ proba = model.predict_proba(input_scaled)[0]
 st.subheader("Prediction Result")
 st.write("🔍 Prediction: **{}**".format("Death" if prediction == 1 else "Survival"))
 st.write("📊 Confidence: {:.2f}%".format(100 * np.max(proba)))
-
-st.subheader("Model Accuracy")
-st.write(f"✅ Trained model accuracy: **{acc:.2%}**")
 
 st.subheader("Input Patient Data")
 st.dataframe(input_df)
